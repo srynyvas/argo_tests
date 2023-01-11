@@ -5,7 +5,7 @@ metadata:
     app: seldon
   name: example
 spec:
-  name: production-model
+  name: shadow-model
   predictors:
   - componentSpecs:
     - spec:
@@ -22,3 +22,19 @@ spec:
       type: MODEL
     name: default
     replicas: 1
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/mock_classifier:{VERSION}
+          imagePullPolicy: IfNotPresent
+          name: classifier
+    graph:
+      children: []
+      endpoint:
+        type: REST
+      name: classifier
+      type: MODEL
+    name: shadow
+    replicas: 1
+    shadow: true
+    traffic: 100
