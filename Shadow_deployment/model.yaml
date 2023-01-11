@@ -22,7 +22,6 @@ spec:
       type: MODEL
     name: default
     replicas: 1
-<<<<<<< HEAD
   - componentSpecs:
     - spec:
         containers:
@@ -39,5 +38,3 @@ spec:
     replicas: 1
     shadow: true
     traffic: 100
-=======
->>>>>>> a89f9b46a822dfc864c058f82139829f22b521a4
