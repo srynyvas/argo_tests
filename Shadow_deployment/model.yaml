@@ -10,7 +10,7 @@ spec:
   - componentSpecs:
     - spec:
         containers:
-        - image: seldonio/mock_classifier:{VERSION}
+        - image: seldonio/mock_classifier:1.0
           imagePullPolicy: IfNotPresent
           name: classifier
         terminationGracePeriodSeconds: 1
