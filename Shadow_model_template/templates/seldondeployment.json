@@ -36,6 +36,7 @@
         "name": "default",
         "replicas": 1
       },
+      {{- if .Values.shadow.enabled}}
       {
         "componentSpecs": [
           {
@@ -63,6 +64,7 @@
         "shadow": true,
         "traffic": 100
       }
+      {{- end}}
     ]
   }
 }
