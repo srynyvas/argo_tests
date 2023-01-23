@@ -1,0 +1,97 @@
+{
+    "kind": "SeldonDeployment",
+    "apiVersion": "{{ .Values.apiVersion }}",
+    "metadata": {
+        "name": "{{ .Release.Name }}",
+        "namespace": "{{ .Release.Namespace }}"
+    },
+    "spec":{
+        "name": "{{ .Release.Name }}",
+        "protocol": "{{ .Values.protocol }}"
+
+    },
+    "predictors": [
+        {
+            "componentSpecs": [
+                {
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "model",
+                                "image": "{{ .Values.model.image }}",
+                                "imagePullPolicy": "Always",
+                                "env": [
+                                    {{- range $var, $val := .Values.model.env }}
+                                        {
+                                            "name": "{{ $var }}",
+                                            "value": "{{ $val }}"
+                                        },
+                                    {{end -}}
+                                ],
+                                "resources": {{ .Values.model.resources | toJson }},
+
+                            }    
+                        ],
+                        "terminationGracePeriodSeconds":10
+                    },
+                    "graph": {
+                        "children": [],
+                        "endpoint": {
+                            "type": "REST"
+                        },
+                        "name": "model",
+                        "implementation": "{{ .Values.model.implementation }}",
+                        "envSecretRefName": "{{ .Values.model.envSecretRefName }}",
+                        "storageInitializerImage": "{{ .values.model.storageInitializerImage }}",
+                        "modelUri": "{{ .Values.model.uri }}",
+                        "type": "MODEL"
+                    },
+                    "replicas": 1
+
+                }
+            ],
+            "componentSpecs": [
+                {
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "shadow_model",
+                                "image": "{{ .Values.shadow_model.image }}",
+                                "imagePullPolicy": "Always",
+                                "env": [
+                                    {{- range $var, $val := .Values.model.env }}
+                                        {
+                                            "name": "{{ $var }}",
+                                            "value": "{{ $val }}"
+                                        },
+                                    {{end -}}
+                                ],
+                                "resources": {{ .Values.model.resources | toJson }},
+
+                            }    
+                        ],
+                        "terminationGracePeriodSeconds":10
+                    },
+                    "graph": {
+                        "children": [],
+                        "endpoint": {
+                            "type": "REST"
+                        },
+                        "name": "model",
+                        "implementation": "{{ .Values.model.implementation }}",
+                        "envSecretRefName": "{{ .Values.model.envSecretRefName }}",
+                        "storageInitializerImage": "{{ .values.model.storageInitializerImage }}",
+                        "modelUri": "{{ .Values.shadow_model.uri }}",
+                        "type": "MODEL"
+                    },
+                    "name": "shadow",
+                    "shadow": true,
+                    "traffic": 100,
+                    "replicas": 1
+
+                }
+            ] 
+
+    }]
+    
+}

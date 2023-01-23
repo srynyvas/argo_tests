@@ -1,0 +1,32 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+protocol: seldon
+model: 
+  implementation: CUSTOM_INFERENCE_RT_PZAAS
+  uri: "s3://vz-app-gts-ienv-non-prod-dev-model-artifact-s3bucket/rt-pzaas-v1-dev/artifacts/v1.21/"
+  envSecretRefName: seldon-rclone-secret
+  storageInitializerImage: ienv-docker-np.oneartifactoryci.verizon.com/seldonio/rclone-storage-initializer:1.14.0-dev
+  image: ienv.docker-np.oneartifactoryci.verizon.com/jarvis/models/rt-base:v1
+  imagePullPolicy: Always
+  env: 
+    modelUri: "s3://vz-app-gts-ienv-non-prod-dev-model-artifact-s3bucket/rt-pzaas-v1-dev/artifacts/v1.21/"
+    GUNICORN_WORKERS: '6'
+    GUNICORN_THREADS: '10'
+    LOG_LEVEL: INFO
+    toggle: 'OFF'
+  resources: 
+    requests: 
+      cpu: 100m
+      memory: 1.5Gi
+    limits:
+      cpu: 4000m
+      memory: 6Gi
+  replicas: '3'
+  labels:
+    seldon.io/controller-id: seldon-system
+    ssdModelId: '334'
+    region: EAST
+  annotations: {}
+shadow_model:
+  enabled: true
+  image: ienv.docker-np.oneartifactoryci.verizon.com/jarvis/models/rt-base:v1
+  uri: "s3://vz-app-gts-ienv-non-prod-dev-model-artifact-s3bucket/rt-pzaas-v1-dev/artifacts/v1.21/"
