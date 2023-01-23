@@ -3,7 +3,7 @@
     "apiVersion": "{{ .Values.apiVersion}}",
     "metadata": {
         "name": "{{ .Release.Name }}",
-        "namespace": "{{ .Release.Namespace }}"
+        "namespace": "argo-test-apps"
     },
     "spec":{
         "name": "{{ .Release.Name }}",
