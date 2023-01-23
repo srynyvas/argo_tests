@@ -1,0 +1,43 @@
+{
+    "kind": "SeldonDeployment",
+    "apiVersion": "machinelearning.seldon.io/v1",
+    "metadata": {
+      "name": "mymodel",
+      "namespace": "seldon",
+      "labels": {}
+    },
+    "spec": {
+        "name": "mymodel",
+        "protocol": "seldon",
+      "annotations": {},
+      "predictors": [
+        {
+          "name": "default",
+          "graph": {
+            "name": "model",
+            "type": "MODEL",
+          },
+          "componentSpecs": [
+            {
+              "spec": {
+                "containers": [
+                  {
+                    "name": "model",
+                    "image": "seldonio/mock_classifier:1.7.0-dev",
+                    "env": [
+                        {
+                          "name": "LOG_LEVEL",
+                          "value": "INFO"
+                        },
+                      ],
+                    "resources": {"requests":{"memory":"1Mi"}},
+                  }
+                ]
+              },
+            }
+          ],
+          "replicas": 1
+        }
+      ]
+    }
+  }

@@ -1,0 +1,142 @@
+{
+    "kind": "SeldonDeployment",
+    "apiVersion": "{{ .Values.apiVersion }}",
+    "metadata": {
+      "name": "{{ .Release.Name }}",
+      "namespace": "{{ .Release.Namespace }}",
+      "labels": {
+        {{- range $name, $val := .Values.labels }}
+          "{{ $name }}": "{{ $val }}",
+        {{ end -}}
+      }
+    },
+    "spec": {
+        "name": "{{ .Release.Name }}",
+        "predictors": [
+          {
+            "name": "default",       
+            "componentSpecs": [
+              {
+                "spec": {
+                  "containers": [
+                    {
+                      "name": "model",
+                      {{- if .Values.model.image }}
+                      "image": "{{ .Values.model.image }}",
+                      {{- end}}
+                      "env": [
+                        {{- range $var, $val := .Values.model.env }}
+                          {
+                            "name": "{{ $var }}",
+                            "value": "{{ $val }}"
+                          },
+                        {{ end -}}
+                      ],
+                      "resources": {{ .Values.model.resources | toJson }},
+                    }
+                  ]
+                },
+                "graph": {
+                  "children": [],
+                  "endpoint": {
+                    "type": "REST"
+                  },
+                  "name": "model",
+                  {{- if .Values.model.implementation }}
+                  "implementation": "{{ .Values.model.implementation }}",
+                  {{- end}}
+                  {{- if .Values.model.envSecretRefName }}
+                  "envSecretRefName": "{{ .Values.model.envSecretRefName }}",
+                  {{- end}}
+                  {{- if .Values.model.uri }}
+                  "modelUri": "{{ .Values.model.uri }}",
+                  {{- end}}
+                  {{- if .Values.model.mlflow.xtype }}
+                  "parameters": [
+                {
+                    "name": "xtype",
+                    "type": "STRING",
+                    "value": "{{ .Values.model.mlflow.xtype }}" 
+                }
+              ],
+                  {{- end}}
+                  "type": "MODEL",
+                  {{- if .Values.model.logger.enabled }}
+                  "logger": {
+                    "mode": "all",
+                    {{- if .Values.model.logger.url }}
+                    "url": "{{ .Values.model.logger.url }}",
+                    {{- end}}
+                  },
+                  {{- end}}
+                },
+                "name": "default",
+                "replicas": 1
+              }
+            ],
+            "componentSpecs": [
+              {
+                "spec": {
+                  "containers": [
+                    {
+                      "name": "model",
+                      {{- if .Values.model.image }}
+                      "image": "{{ .Values.model.image }}",
+                      {{- end}}
+                      "env": [
+                        {{- range $var, $val := .Values.model.env }}
+                          {
+                            "name": "{{ $var }}",
+                            "value": "{{ $val }}"
+                          },
+                        {{ end -}}
+                      ],
+                      "resources": {{ .Values.model.resources | toJson }},
+                    }
+                  ]
+                },
+                "graph": {
+                  "children": [],
+                  "endpoint": {
+                    "type": "REST"
+                  },
+                  "name": "model",
+                  {{- if .Values.model.implementation }}
+                  "implementation": "{{ .Values.model.implementation }}",
+                  {{- end}}
+                  {{- if .Values.model.envSecretRefName }}
+                  "envSecretRefName": "{{ .Values.model.envSecretRefName }}",
+                  {{- end}}
+                  {{- if .Values.model.uri }}
+                  "modelUri": "{{ .Values.model.uri }}",
+                  {{- end}}
+                  {{- if .Values.model.mlflow.xtype }}
+                  "parameters": [
+                {
+                    "name": "xtype",
+                    "type": "STRING",
+                    "value": "{{ .Values.model.mlflow.xtype }}" 
+                }
+              ],
+                  {{- end}}
+                  "type": "MODEL",
+                  {{- if .Values.model.logger.enabled }}
+                  "logger": {
+                    "mode": "all",
+                    {{- if .Values.model.logger.url }}
+                    "url": "{{ .Values.model.logger.url }}",
+                    {{- end}}
+                  },
+                  {{- end}}
+                },
+                "name": "shadow",
+                "replicas": 1,
+                "shadow": true,
+                "traffic": 100
+              }
+            ]
+            
+          }
+        ]
+    }
+  }
