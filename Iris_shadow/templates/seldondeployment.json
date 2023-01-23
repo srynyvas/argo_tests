@@ -1,0 +1,31 @@
+{
+    "kind": "SeldonDeployment",
+    "apiVersion": "{{ .Values.apiVersion}}",
+    "metadata": {
+        "name": "{{ .Release.Name }}",
+        "namespace": "{{ .Release.Namespace }}"
+    },
+    "spec":{
+        "name": "{{ .Release.Name }}",
+        "protocol": "{{ .Values.protocol }}"
+
+    },
+    "predictors": [
+        {
+            "componentSpecs": [
+                {
+                    "graph": {
+                        "children": [],
+                        "endpoint": {
+                            "type": "REST"
+                        },
+                        "implementation": "{{ .Values.model.implementation}}",
+                        "modelUri": "{{ .Values.model.modelUri}}",
+                        "name": "classifier"
+                    },
+                    "replicas": 1
+                }
+            ]
+
+    }]
+}
