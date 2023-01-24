@@ -37,8 +37,8 @@
         "replicas": 1
       },
       
-      {
-        {{- if .Values.shadow.enabled}}
+      {{- if .Values.shadow.enabled}}
+      { 
         "componentSpecs": [
           {
             "spec": {
@@ -64,9 +64,8 @@
         "replicas": 1,
         "shadow": true,
         "traffic": 100
-        {{- end}}
       }
-      
+      {{- end}}
     ]
   }
 }
